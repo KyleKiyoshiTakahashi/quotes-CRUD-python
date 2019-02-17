@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Quote Dashboard</title>
+	<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+<style>
+	*{
+		margin:0px;
+		padding: 0px;
+
+	}
+
+	.container{
+		min-height: 400px;
+		width: 970px;
+	}
+	.welcome{
+		display: inline-block;
+	}
+	.edit{
+		display: inline-block;
+		margin-left: 200px;
+	}
+	.logout{
+		display: inline-block;
+		padding: 10px;
+	}
+</style>
+</head>
+<body>
+	<div class="container">
+		<div class="header">
+			<h3 class="welcome">Welcome {{user['first_name']}} {{user['last_name']}}</h3>
+			<a href="/myaccount/{{user['id']}}" class="edit">Edit My Account</a>
+			<a href="/logout" class="logout">Logout</a>
+		</div>
+		<div class="left">
+			<h3>Quotes</h3>
+			{% for quote in my_quotes %}
+			<p>{{quote['author']}}: "{{quote['content']}}" </p>
+			<p> Posted by: <a href="/user/{{quote['creator_id']}}">{{user['first_name']}} {{user['last_name']}}</a></p>
+			<a href="/delete/{{quote['id']}}">Delete</a>
+			{% endfor %}
+			
+			{% for quote in other_quotes %}
+			<p>{{quote['author']}}: "{{quote['content']}}"</p>
+			<p> Posted by: <a href="/user/{{quote['creator_id']}}">{{quote['first_name']}} {{quote['last_name']}}</a></p>
+			{% endfor %}
+		</div>
+		<div class="right">
+			<h3>Add A Quote</h3>
+			{% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <p>{{message}}</p>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+			<form action="/add/{{user['id']}}" method="post">
+				<p>Author: <input type="text" name="author"></p>
+				<p>Quote: <input type="text" name="content"></p>
+				<input type="submit" value="Submit">
+			</form>
+		</div>
+	</div>
+</body>
+</html>
